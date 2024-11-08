@@ -2,6 +2,9 @@ import requests
 import pandas as pd
 from dotenv import load_dotenv
 import os
+from datetime import datetime, timedelta
+
+
 load_dotenv()
 api_key = os.getenv('POLYGON_API_KEY')
 def get_stock_data(symbol, start_date, end_date):
@@ -36,8 +39,9 @@ def get_stock_data(symbol, start_date, end_date):
     except Exception as e:
         print(f"Error: {str(e)}")
         return None
-def load_stock_data(symbol, start_date=None, end_date=None):
-    df = pd.read_csv(f'{symbol}_2yr_data.csv')
+
+def load_stock_data(symbol, sector, start_date=None, end_date=None):
+    df = pd.read_csv(f'./data/{sector}/{symbol}_2yr_data.csv')
     
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
@@ -53,4 +57,14 @@ def load_stock_data(symbol, start_date=None, end_date=None):
         df = df[df.index <= end_date]
     
     return df
+
+symbol = 'FDX'
+sector = 'post'
+end_date = datetime.now()
+start_date = end_date - timedelta(days=3650)
+
+df = get_stock_data(symbol, start_date, end_date)
+
+if df is not None:
+    df.to_csv(f'./data/{sector}/{symbol}_2yr_data.csv', index=False)
 

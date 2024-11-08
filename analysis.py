@@ -1,12 +1,12 @@
-from data import get_stock_data
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
+from pairs import analyze_pairs, print_analysis
+from visuals import plot_returns_regression
 
-symbol = 'GS'
-end_date = datetime.now()
-start_date = end_date - timedelta(days=3650)
-
-df = get_stock_data(symbol, start_date, end_date)
-
-if df is not None:
-    df.to_csv(f'{symbol}_2yr_data.csv', index=False)
+start_date = datetime(2023, 6, 1)
+end_date = datetime(2024, 1, 1)
+sector = "post"
+stock_1='FDX'
+stock_2='UPS'
+results = analyze_pairs(stock_1, stock_2, sector,start_date, end_date)
+print_analysis(results)
+plot_returns_regression(results['returns1'], results['returns2'], stock_1, stock_2)

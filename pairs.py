@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 
 
-def analyze_pairs(symbol1, symbol2, start_date, end_date):
+def analyze_pairs(symbol1, symbol2, sector, start_date, end_date):
     """
     Analyze two stocks for pairs trading suitability using Polygon.io data
     
@@ -19,8 +19,8 @@ def analyze_pairs(symbol1, symbol2, start_date, end_date):
     dict: Dictionary containing all metrics
     """
     # Get data for both stocks
-    df1 = load_stock_data(symbol1, start_date, end_date)
-    df2 = load_stock_data(symbol2, start_date, end_date)
+    df1 = load_stock_data(symbol1,sector, start_date, end_date)
+    df2 = load_stock_data(symbol2,sector, start_date, end_date)
     
     if df1 is None or df2 is None:
         return None
@@ -39,6 +39,8 @@ def analyze_pairs(symbol1, symbol2, start_date, end_date):
     
     # Initialize results dictionary
     results = {
+        'returns1':returns1,
+        'returns2':returns2,
         'pair': f"{symbol1}-{symbol2}",
         'observations': len(data1),
         'start_date': common_index[0],
@@ -176,7 +178,4 @@ def check_pair_suitability(results):
     
     return results
 
-start_date = datetime(2023, 6, 1)
-end_date = datetime(2024, 1, 1)
-results = analyze_pairs('JPM', 'GS', start_date, end_date)
-print_analysis(results)
+
